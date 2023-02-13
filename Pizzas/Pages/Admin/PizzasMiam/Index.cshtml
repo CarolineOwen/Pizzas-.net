@@ -1,0 +1,57 @@
+﻿@page
+@model Pizzas.Pages.Admin.PizzasMiam.IndexModel
+
+@{
+    ViewData["Title"] = "Liste des pizzas";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    @*lien qui va appeller la page create*@
+    <a asp-page="Create">Create New</a>
+</p>
+ @*va créer un tableau avec des propriétés d'après le model IndexModel du fichier Index.cshtml.cs*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizza[0].Nom)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizza[0].Prix)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizza[0].Vegetarienne)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Pizza[0].Ingredients)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @*pour chaque élément de la liste Pizza initialisé dans l'IndexModel on affiche les propriétés voulues*@
+@foreach (var item in Model.Pizza) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nom)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prix)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Vegetarienne)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ingredients)
+            </td>
+            <td>
+                @*insère un lien de redirection via un bouton a*@
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
