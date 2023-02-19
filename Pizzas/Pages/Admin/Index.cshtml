@@ -5,6 +5,10 @@
 
 <h2>Veuillez vous authentifier</h2>
 <br />
+@if (Model.InvalidConnection)
+{
+    <div class="alert alert-danger role="alert">Erreur: compte invalide</div>
+}
 
 <form method="post">
     <input type="text" name="username" placeholder="Login">

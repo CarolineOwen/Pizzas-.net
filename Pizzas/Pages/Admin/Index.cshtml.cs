@@ -6,11 +6,19 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.Extensions.Configuration;
 
 namespace Pizzas.Pages.Admin
 {
     public class IndexModel : PageModel
     {
+        public bool InvalidConnection = false;
+        //création d'un constructeur pour utiliser le Iconfiguration, j'ai maintenant accès à configuration que je vais utiliser dans le Post
+        IConfiguration configuration;
+        public IndexModel(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
         public IActionResult OnGet()
         {
            if(HttpContext.User.Identity.IsAuthenticated)
@@ -24,7 +32,13 @@ namespace Pizzas.Pages.Admin
         //une fonction async retourne un Task, le IActionResult c'est pour retourner la page qu'on veut et non celle par défault sert à utiliser des actions le Redirect par exemple
         public async Task<IActionResult> OnPostAsync(string username, string password)
         {
-            if (username == "admin")
+            //pour accéder à la section Auth du appsettings.json, après le authSection s'utilise comme un dictionnaire
+            var authSection = configuration.GetSection("Auth");
+
+            string adminLogin = authSection["AdminLogin"];
+            string adminPassword = authSection["AdminPassword"];
+
+            if (username == adminLogin && password == adminPassword)
             {
                 var claims = new List<Claim>
  {
@@ -35,6 +49,7 @@ namespace Pizzas.Pages.Admin
                ClaimsPrincipal(claimsIdentity));
                 return Redirect( "/Admin/Pizzasmiam");
             }
+            InvalidConnection = true;
             return Page();
 
         }
